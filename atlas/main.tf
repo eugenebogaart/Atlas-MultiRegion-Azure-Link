@@ -65,10 +65,15 @@ resource "mongodbatlas_database_user" "user1" {
     role_name     = "readWriteAnyDatabase"
     database_name = "admin"
   }
+
   labels {
-    key   = "Name"
-    value = var.admin_password
+    key   = "Created"
+    value = "${timestamp()}"
   }
+
+  # Label "Created" has always a different value, one can prevent updates with lifecycle 
+  lifecycle { ignore_changes = [labels] }
+
   scopes {
     name = mongodbatlas_advanced_cluster.this.name
     type = "CLUSTER"
